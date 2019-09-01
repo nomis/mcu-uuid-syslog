@@ -91,11 +91,11 @@ void SyslogService::set_log_level(uuid::log::Level level) {
 	}
 
 	if (level < uuid::log::Level::NOTICE) {
-		logger_.notice(F("Log level set to %S"), uuid::log::format_level_uppercase(level));
+		logger_.info(F("Log level set to %S"), uuid::log::format_level_uppercase(level));
 	}
 	uuid::log::Logger::register_handler(this, level);
 	if (level >= uuid::log::Level::NOTICE) {
-		logger_.notice(F("Log level set to %S"), uuid::log::format_level_uppercase(level));
+		logger_.info(F("Log level set to %S"), uuid::log::format_level_uppercase(level));
 	}
 }
 

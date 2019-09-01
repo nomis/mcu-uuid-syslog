@@ -8,6 +8,7 @@ Changed
 ~~~~~~~
 
 * Add log level to the message text.
+* Lower the log level of log level change messages to ``INFO``.
 
 1.0.0_ |--| 2019-09-01
 ----------------------
