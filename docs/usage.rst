@@ -11,7 +11,8 @@ the destination host, log level and optional local hostname.
 The default log level is |uuid::log::Level::ALL| so it can capture
 messages logged during startup before any configuration is read.
 
-When WiFi connectivity is available the queued messages will be sent.
+Call |loop()|_ regularly and when WiFi connectivity is available the
+queued messages will be sent.
 
 On ESP8266 and ESP32 platforms an ARP query will be made every second
 until a route to the destination host is available, before sending
@@ -35,3 +36,6 @@ Example
 
 .. |start()| replace:: ``start()``
 .. _start(): https://mcu-doxygen.uuid.uk/classuuid_1_1syslog_1_1SyslogService.html#ae03a4d85f9c01a880989140075dc922d
+
+.. |loop()| replace:: ``loop()``
+.. _loop(): https://mcu-doxygen.uuid.uk/classuuid_1_1syslog_1_1SyslogService.html#a1abe229d87662df83cdc75682db6f183
