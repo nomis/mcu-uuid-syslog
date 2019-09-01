@@ -130,7 +130,7 @@ public:
 	/**
 	 * Set local hostname.
 	 *
-	 * @param[in] host Hostname of this device.
+	 * @param[in] hostname Hostname of this device.
 	 * @since 1.0.0
 	 */
 	void set_hostname(std::string hostname);
@@ -146,8 +146,9 @@ public:
 	 * Add a new log message.
 	 *
 	 * This will be put in a queue for output at the next loop()
-	 * process. The queue has a maximum size of maximum_log_messages()
-	 * and will discard the oldest message first.
+	 * process. The queue has a maximum size of
+	 * get_maximum_log_messages() and will discard the oldest message
+	 * first.
 	 *
 	 * @param[in] message New log message, shared by all handlers.
 	 * @since 1.0.0
