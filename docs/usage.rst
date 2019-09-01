@@ -34,4 +34,4 @@ Example
 .. _uuid::log::Level::ALL: https://mcu-doxygen.uuid.uk/namespaceuuid_1_1log.html#a3e74b277087df0622d1778698f1a45dca6fed2f923983459f91ab90ef08cbdeea
 
 .. |start()| replace:: ``start()``
-.. _start():
+.. _start(): https://mcu-doxygen.uuid.uk/classuuid_1_1syslog_1_1SyslogService.html#ae03a4d85f9c01a880989140075dc922d
