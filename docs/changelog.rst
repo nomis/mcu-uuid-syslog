@@ -4,6 +4,11 @@ Change log
 Unreleased_
 -----------
 
+Changed
+~~~~~~~
+
+* Add log level to the message text.
+
 1.0.0_ |--| 2019-09-01
 ----------------------
 
