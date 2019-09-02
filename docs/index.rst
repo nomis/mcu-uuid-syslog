@@ -11,6 +11,15 @@ Purpose
 
 Provides a log handler that sends messages to a syslog server.
 
+Dependencies
+------------
+
+* `mcu-uuid-common <https://mcu-uuid-common.readthedocs.io/>`_
+* `mcu-uuid-log <https://mcu-uuid-log.readthedocs.io/>`_
+
+Refer to the :download:`library.json <../library.json>` file for more
+details.
+
 Contents
 --------
 
