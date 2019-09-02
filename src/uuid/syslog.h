@@ -129,6 +129,10 @@ public:
 	/**
 	 * Set the server to send messages to.
 	 *
+	 * To disable sending messages, set the host to `0.0.0.0` and the
+	 * log level to uuid::log::Level::OFF (otherwise they will be
+	 * queued but not sent).
+	 *
 	 * @param[in] host IP address of the syslog server.
 	 * @param[in] port UDP port to send messages to.
 	 * @since 2.0.0
@@ -150,6 +154,25 @@ public:
 	 * @since 1.0.0
 	 */
 	void set_hostname(std::string hostname);
+
+	/**
+	 * Get mark interval.
+	 *
+	 * @since 2.0.0
+	 * @return Mark interval in seconds.
+	 */
+	unsigned long get_mark_interval() const;
+
+	/**
+	 * Set mark interval.
+	 *
+	 * When no messages have been sent for this period of time, a
+	 * `-- MARK --` message will be generated automatically.
+	 *
+	 * @param[in] interval Mark interval in seconds.
+	 * @since 2.0.0
+	 */
+	void set_mark_interval(unsigned long interval);
 
 	/**
 	 * Dispatch queued log messages.
@@ -240,6 +263,8 @@ private:
 	unsigned long log_message_id_ = 0; /*!< The next identifier to use for queued log messages. @since 1.0.0 */
 	std::list<QueuedLogMessage> log_messages_; /*!< Queued log messages, in the order they were received. @since 1.0.0 */
 	bool log_messages_overflow_ = false; /*!< Check if log messages have overflowed the buffer. @since 1.0.0 */
+	uint64_t mark_interval_ = 0; /*!< Mark interval in milliseconds. @since 2.0.0 */
+	uint64_t last_message_ = 0; /*!< Last message/mark time. @since 2.0.0 */
 };
 
 } // namespace syslog

@@ -8,6 +8,8 @@ Added
 ~~~~~
 
 * Functions to get all of the configuration parameters.
+* Support for sending a ``-- MARK --`` message when there is no
+  activity for a configurable period of time.
 
 Changed
 ~~~~~~~

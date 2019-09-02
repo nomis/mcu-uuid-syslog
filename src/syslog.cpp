@@ -90,11 +90,15 @@ void SyslogService::set_log_level(uuid::log::Level level) {
 		remove_queued_messages(level);
 	}
 
-	if (level < uuid::log::Level::NOTICE) {
+	static bool level_set = false;
+	bool level_changed = !level_set || (level != get_log_level());
+	level_set = true;
+
+	if (level_changed && level < uuid::log::Level::NOTICE) {
 		logger_.info(F("Log level set to %S"), uuid::log::format_level_uppercase(level));
 	}
 	uuid::log::Logger::register_handler(this, level);
-	if (level >= uuid::log::Level::NOTICE) {
+	if (level_changed && level >= uuid::log::Level::NOTICE) {
 		logger_.info(F("Log level set to %S"), uuid::log::format_level_uppercase(level));
 	}
 }
@@ -137,6 +141,14 @@ void SyslogService::set_hostname(std::string hostname) {
 	}
 }
 
+unsigned long SyslogService::get_mark_interval() const {
+	return mark_interval_ / 1000;
+}
+
+void SyslogService::set_mark_interval(unsigned long interval) {
+	mark_interval_ = (uint64_t)interval * 1000;
+}
+
 SyslogService::QueuedLogMessage::QueuedLogMessage(unsigned long id, std::shared_ptr<uuid::log::Message> &&content)
 		: id_(id), content_(content) {
 	if (time_good_ || WiFi.status() == WL_CONNECTED) {
@@ -177,14 +189,29 @@ void SyslogService::loop() {
 		started_ = true;
 		log_messages_overflow_ = false;
 		auto ok = transmit(message);
-		if (ok && !log_messages_overflow_) {
-			log_messages_.pop_front();
+		if (ok) {
+			if (!log_messages_overflow_) {
+				log_messages_.pop_front();
+			}
+			last_message_ = uuid::get_uptime_ms();
 		}
 
 		::yield();
 
 		if (!ok) {
 			break;
+		}
+	}
+
+	if (started_ && mark_interval_ != 0 && log_messages_.empty()) {
+		if (uuid::get_uptime_ms() - last_message_ >= mark_interval_) {
+			// This is generated manually because the log level may not
+			// be high enough to receive INFO messages.
+			operator<<(std::make_shared<uuid::log::Message>(uuid::get_uptime_ms(),
+					uuid::log::Level::INFO,
+					uuid::log::Facility::SYSLOG,
+					reinterpret_cast<const __FlashStringHelper *>(__pstr__logger_name),
+					uuid::read_flash_string(F("-- MARK --"))));
 		}
 	}
 }
