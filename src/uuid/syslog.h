@@ -159,7 +159,7 @@ public:
 	 * Get mark interval.
 	 *
 	 * @since 2.0.0
-	 * @return Mark interval in seconds.
+	 * @return Mark interval in seconds (0 = disable).
 	 */
 	unsigned long get_mark_interval() const;
 
@@ -169,7 +169,7 @@ public:
 	 * When no messages have been sent for this period of time, a
 	 * `-- MARK --` message will be generated automatically.
 	 *
-	 * @param[in] interval Mark interval in seconds.
+	 * @param[in] interval Mark interval in seconds (0 = disable).
 	 * @since 2.0.0
 	 */
 	void set_mark_interval(unsigned long interval);
