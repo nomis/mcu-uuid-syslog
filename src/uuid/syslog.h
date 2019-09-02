@@ -108,7 +108,7 @@ public:
 	 * @return The maximum number of queued log messages.
 	 * @since 1.0.0
 	 */
-	size_t get_maximum_log_messages();
+	size_t get_maximum_log_messages() const;
 	/**
 	 * Set the maximum number of queued log messages.
 	 *
@@ -119,13 +119,29 @@ public:
 	void set_maximum_log_messages(size_t count);
 
 	/**
+	 * Get the server to send messages to.
+	 *
+	 * @since 2.0.0
+	 * @return IP address and UDP port of the syslog server.
+	 */
+	std::pair<IPAddress,uint16_t> get_destination() const;
+
+	/**
 	 * Set the server to send messages to.
 	 *
 	 * @param[in] host IP address of the syslog server.
 	 * @param[in] port UDP port to send messages to.
-	 * @since 1.0.0
+	 * @since 2.0.0
 	 */
-	void set_host(IPAddress host, uint16_t port = DEFAULT_PORT);
+	void set_destination(IPAddress host, uint16_t port = DEFAULT_PORT);
+
+	/**
+	 * Get local hostname.
+	 *
+	 * @since 2.0.0
+	 * @return Hostname of this device.
+	 */
+	std::string get_hostname() const;
 
 	/**
 	 * Set local hostname.

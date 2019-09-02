@@ -4,11 +4,17 @@ Change log
 Unreleased_
 -----------
 
+Added
+~~~~~
+
+* Functions to get all of the configuration parameters.
+
 Changed
 ~~~~~~~
 
 * Add log level to the message text.
 * Lower the log level of log level change messages to ``INFO``.
+* Rename ``set_host()`` to ``set_destination()``.
 
 1.0.0_ |--| 2019-09-01
 ----------------------

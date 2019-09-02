@@ -99,7 +99,7 @@ void SyslogService::set_log_level(uuid::log::Level level) {
 	}
 }
 
-size_t SyslogService::get_maximum_log_messages() {
+size_t SyslogService::get_maximum_log_messages() const {
 	return maximum_log_messages_;
 }
 
@@ -111,7 +111,11 @@ void SyslogService::set_maximum_log_messages(size_t count) {
 	}
 }
 
-void SyslogService::set_host(IPAddress host, uint16_t port) {
+std::pair<IPAddress,uint16_t> SyslogService::get_destination() const {
+	return std::make_pair(host_, port_);
+}
+
+void SyslogService::set_destination(IPAddress host, uint16_t port) {
 	host_ = host;
 	port_ = port;
 
@@ -119,6 +123,10 @@ void SyslogService::set_host(IPAddress host, uint16_t port) {
 		started_ = false;
 		remove_queued_messages(get_log_level());
 	}
+}
+
+std::string SyslogService::get_hostname() const {
+	return hostname_;
 }
 
 void SyslogService::set_hostname(std::string hostname) {
