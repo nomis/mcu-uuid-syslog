@@ -17,9 +17,10 @@ void setup() {
 	 * in case the settings read process logs
 	 * some messages.
 	 */
-	syslog.set_log_level(uuid::log::DEBUG);
-	syslog.set_host(IPAddress(192, 0, 2, 1));
 	syslog.set_hostname("example");
+	syslog.set_log_level(uuid::log::DEBUG);
+	syslog.set_mark_interval(3600);
+	syslog.set_destination(IPAddress(192, 0, 2, 1));
 
 	WiFi.persistent(false);
 	WiFi.mode(WIFI_STA);
