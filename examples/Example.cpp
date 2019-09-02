@@ -18,7 +18,7 @@ void setup() {
 	 * some messages.
 	 */
 	syslog.set_log_level(uuid::log::DEBUG);
-	syslog.set_host(IPAddress(192, 168, 0, 1));
+	syslog.set_host(IPAddress(192, 0, 2, 1));
 	syslog.set_hostname("example");
 
 	WiFi.persistent(false);
