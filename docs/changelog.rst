@@ -4,6 +4,11 @@ Change log
 Unreleased_
 -----------
 
+2.0.0_ |--| 2019-09-03
+----------------------
+
+Additional features and API changes.
+
 Added
 ~~~~~
 
@@ -16,7 +21,7 @@ Changed
 
 * Add log level to the message text.
 * Lower the log level of log level change messages to ``INFO``.
-* Rename ``set_host()`` to ``set_destination()``.
+* Rename ``set_host()`` to ``destination()``.
 * Remove ``get_`` and ``set_`` from function names.
 
 Fixed
@@ -44,5 +49,6 @@ Added
 
 .. |--| unicode:: U+2013 .. EN DASH
 
-.. _Unreleased: https://github.com/nomis/mcu-uuid-syslog/compare/1.0.0...HEAD
+.. _Unreleased: https://github.com/nomis/mcu-uuid-syslog/compare/2.0.0...HEAD
+.. _2.0.0: https://github.com/nomis/mcu-uuid-syslog/compare/1.0.0...2.0.0
 .. _1.0.0: https://github.com/nomis/mcu-uuid-syslog/commits/1.0.0
