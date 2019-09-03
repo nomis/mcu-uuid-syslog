@@ -86,9 +86,9 @@ public:
 	 * have already been queued.
 	 *
 	 * @return The current log level.
-	 * @since 1.0.0
+	 * @since 2.0.0
 	 */
-	uuid::log::Level get_log_level() const;
+	uuid::log::Level log_level() const;
 	/**
 	 * Set the current log level.
 	 *
@@ -98,25 +98,25 @@ public:
 	 *
 	 * @param[in] level Minimum log level that will be sent to the
 	 *                  syslog server.
-	 * @since 1.0.0
+	 * @since 2.0.0
 	 */
-	void set_log_level(uuid::log::Level level);
+	void log_level(uuid::log::Level level);
 
 	/**
 	 * Get the maximum number of queued log messages.
 	 *
 	 * @return The maximum number of queued log messages.
-	 * @since 1.0.0
+	 * @since 2.0.0
 	 */
-	size_t get_maximum_log_messages() const;
+	size_t maximum_log_messages() const;
 	/**
 	 * Set the maximum number of queued log messages.
 	 *
 	 * Defaults to SyslogService::MAX_LOG_MESSAGES.
 	 *
-	 * @since 1.0.0
+	 * @since 2.0.0
 	 */
-	void set_maximum_log_messages(size_t count);
+	void maximum_log_messages(size_t count);
 
 	/**
 	 * Get the server to send messages to.
@@ -124,8 +124,7 @@ public:
 	 * @since 2.0.0
 	 * @return IP address and UDP port of the syslog server.
 	 */
-	std::pair<IPAddress,uint16_t> get_destination() const;
-
+	std::pair<IPAddress,uint16_t> destination() const;
 	/**
 	 * Set the server to send messages to.
 	 *
@@ -137,7 +136,7 @@ public:
 	 * @param[in] port UDP port to send messages to.
 	 * @since 2.0.0
 	 */
-	void set_destination(IPAddress host, uint16_t port = DEFAULT_PORT);
+	void destination(IPAddress host, uint16_t port = DEFAULT_PORT);
 
 	/**
 	 * Get local hostname.
@@ -145,15 +144,14 @@ public:
 	 * @since 2.0.0
 	 * @return Hostname of this device.
 	 */
-	std::string get_hostname() const;
-
+	std::string hostname() const;
 	/**
 	 * Set local hostname.
 	 *
 	 * @param[in] hostname Hostname of this device.
-	 * @since 1.0.0
+	 * @since 2.0.0
 	 */
-	void set_hostname(std::string hostname);
+	void hostname(std::string hostname);
 
 	/**
 	 * Get mark interval.
@@ -161,8 +159,7 @@ public:
 	 * @since 2.0.0
 	 * @return Mark interval in seconds (0 = disable).
 	 */
-	unsigned long get_mark_interval() const;
-
+	unsigned long mark_interval() const;
 	/**
 	 * Set mark interval.
 	 *
@@ -172,7 +169,7 @@ public:
 	 * @param[in] interval Mark interval in seconds (0 = disable).
 	 * @since 2.0.0
 	 */
-	void set_mark_interval(unsigned long interval);
+	void mark_interval(unsigned long interval);
 
 	/**
 	 * Dispatch queued log messages.

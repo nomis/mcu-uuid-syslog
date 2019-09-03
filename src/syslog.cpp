@@ -65,7 +65,7 @@ void SyslogService::start() {
 	uuid::log::Logger::register_handler(this, uuid::log::Level::ALL);
 }
 
-uuid::log::Level SyslogService::get_log_level() const {
+uuid::log::Level SyslogService::log_level() const {
 	return uuid::log::Logger::get_log_level(this);
 }
 
@@ -85,13 +85,13 @@ void SyslogService::remove_queued_messages(uuid::log::Level level) {
 	log_message_id_ -= offset;
 }
 
-void SyslogService::set_log_level(uuid::log::Level level) {
+void SyslogService::log_level(uuid::log::Level level) {
 	if (!started_) {
 		remove_queued_messages(level);
 	}
 
 	static bool level_set = false;
-	bool level_changed = !level_set || (level != get_log_level());
+	bool level_changed = !level_set || (level != log_level());
 	level_set = true;
 
 	if (level_changed && level < uuid::log::Level::NOTICE) {
@@ -103,11 +103,11 @@ void SyslogService::set_log_level(uuid::log::Level level) {
 	}
 }
 
-size_t SyslogService::get_maximum_log_messages() const {
+size_t SyslogService::maximum_log_messages() const {
 	return maximum_log_messages_;
 }
 
-void SyslogService::set_maximum_log_messages(size_t count) {
+void SyslogService::maximum_log_messages(size_t count) {
 	maximum_log_messages_ = std::min((size_t)1, count);
 
 	while (log_messages_.size() > maximum_log_messages_) {
@@ -115,25 +115,25 @@ void SyslogService::set_maximum_log_messages(size_t count) {
 	}
 }
 
-std::pair<IPAddress,uint16_t> SyslogService::get_destination() const {
+std::pair<IPAddress,uint16_t> SyslogService::destination() const {
 	return std::make_pair(host_, port_);
 }
 
-void SyslogService::set_destination(IPAddress host, uint16_t port) {
+void SyslogService::destination(IPAddress host, uint16_t port) {
 	host_ = host;
 	port_ = port;
 
 	if ((uint32_t)host_ == (uint32_t)0) {
 		started_ = false;
-		remove_queued_messages(get_log_level());
+		remove_queued_messages(log_level());
 	}
 }
 
-std::string SyslogService::get_hostname() const {
+std::string SyslogService::hostname() const {
 	return hostname_;
 }
 
-void SyslogService::set_hostname(std::string hostname) {
+void SyslogService::hostname(std::string hostname) {
 	if (hostname.empty() || hostname.find(' ') != std::string::npos) {
 		hostname_ = '-';
 	} else {
@@ -141,11 +141,11 @@ void SyslogService::set_hostname(std::string hostname) {
 	}
 }
 
-unsigned long SyslogService::get_mark_interval() const {
+unsigned long SyslogService::mark_interval() const {
 	return mark_interval_ / 1000;
 }
 
-void SyslogService::set_mark_interval(unsigned long interval) {
+void SyslogService::mark_interval(unsigned long interval) {
 	mark_interval_ = (uint64_t)interval * 1000;
 }
 
