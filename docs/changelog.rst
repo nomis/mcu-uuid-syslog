@@ -19,6 +19,12 @@ Changed
 * Rename ``set_host()`` to ``set_destination()``.
 * Remove ``get_`` and ``set_`` from function names.
 
+Fixed
+~~~~~
+
+* Function to set the maximum number of log messages is no longer
+  limited to 0 or 1.
+
 1.0.0_ |--| 2019-09-01
 ----------------------
 

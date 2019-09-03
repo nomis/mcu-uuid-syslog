@@ -108,7 +108,7 @@ size_t SyslogService::maximum_log_messages() const {
 }
 
 void SyslogService::maximum_log_messages(size_t count) {
-	maximum_log_messages_ = std::min((size_t)1, count);
+	maximum_log_messages_ = std::max((size_t)1, count);
 
 	while (log_messages_.size() > maximum_log_messages_) {
 		log_messages_.pop_front();
