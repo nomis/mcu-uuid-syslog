@@ -4,6 +4,11 @@ Change log
 Unreleased_
 -----------
 
+Fixed
+~~~~~
+
+* Use debug level for trace level messages.
+
 2.0.0_ |--| 2019-09-03
 ----------------------
 

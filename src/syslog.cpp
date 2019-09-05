@@ -265,7 +265,7 @@ bool SyslogService::transmit(const QueuedLogMessage &message) {
 		last_transmit_ = uuid::get_uptime_ms();
 		return false;
 	}
-	udp_.printf_P(PSTR("<%u>1 "), ((uint8_t)message.content_->facility * 8) + (uint8_t)message.content_->level);
+	udp_.printf_P(PSTR("<%u>1 "), ((unsigned int)message.content_->facility * 8) + std::min(7U, (unsigned int)message.content_->level));
 	if (tm.tm_year != 0) {
 		udp_.printf_P(PSTR("%04u-%02u-%02uT%02u:%02u:%02u.%06luZ"),
 				tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday,

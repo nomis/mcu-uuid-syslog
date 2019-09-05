@@ -29,6 +29,6 @@
 	},
 	"build": {
 		"flags": "-Wall -Wextra",
-		"libLDFMode": "off"
+		"libLDFMode": "chain+"
 	}
 }
