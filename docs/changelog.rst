@@ -4,6 +4,11 @@ Change log
 Unreleased_
 -----------
 
+2.0.1_ |--| 2019-09-05
+----------------------
+
+Bug fix for trace level messages.
+
 Fixed
 ~~~~~
 
@@ -54,6 +59,7 @@ Added
 
 .. |--| unicode:: U+2013 .. EN DASH
 
-.. _Unreleased: https://github.com/nomis/mcu-uuid-syslog/compare/2.0.0...HEAD
+.. _Unreleased: https://github.com/nomis/mcu-uuid-syslog/compare/2.0.1...HEAD
+.. _2.0.1: https://github.com/nomis/mcu-uuid-syslog/compare/2.0.0...2.0.1
 .. _2.0.0: https://github.com/nomis/mcu-uuid-syslog/compare/1.0.0...2.0.0
 .. _1.0.0: https://github.com/nomis/mcu-uuid-syslog/commits/1.0.0
