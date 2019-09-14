@@ -150,7 +150,7 @@ void SyslogService::mark_interval(unsigned long interval) {
 }
 
 SyslogService::QueuedLogMessage::QueuedLogMessage(unsigned long id, std::shared_ptr<uuid::log::Message> &&content)
-		: id_(id), content_(content) {
+		: id_(id), content_(std::move(content)) {
 	if (time_good_ || WiFi.status() == WL_CONNECTED) {
 #if UUID_SYSLOG_HAVE_GETTIMEOFDAY
 		if (gettimeofday(&time_, nullptr) != 0) {

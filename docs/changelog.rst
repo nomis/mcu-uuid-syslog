@@ -4,6 +4,11 @@ Change log
 Unreleased_
 -----------
 
+Fixed
+~~~~~
+
+* Use move constructors on rvalues.
+
 2.0.1_ |--| 2019-09-05
 ----------------------
 
