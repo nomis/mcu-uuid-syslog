@@ -4,6 +4,7 @@
 #else
 # include <WiFi.h>
 #endif
+#include <uuid/common.h>
 #include <uuid/log.h>
 #include <uuid/syslog.h>
 
