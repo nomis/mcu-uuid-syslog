@@ -25,6 +25,7 @@
 		"arduino"
 	],
 	"dependencies": {
+		"uuid-common": "^1.0.2",
 		"uuid-log": "^2.0.3"
 	},
 	"build": {
