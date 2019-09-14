@@ -9,7 +9,8 @@ Microcontroller syslog service
 Purpose
 -------
 
-Provides a log handler that sends messages to a syslog server.
+Provides a log handler that sends messages to a syslog server (using
+the `RFC 5424 protocol <https://tools.ietf.org/html/rfc5424>`_).
 
 Documentation
 -------------
