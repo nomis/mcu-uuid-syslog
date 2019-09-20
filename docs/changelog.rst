@@ -8,6 +8,7 @@ Fixed
 ~~~~~
 
 * Use move constructors on rvalues.
+* Support for IPv6 addresses.
 
 2.0.1_ |--| 2019-09-05
 ----------------------

@@ -26,18 +26,53 @@
 #endif
 #include <WiFiUdp.h>
 
+#ifndef UUID_SYSLOG_HAVE_GETTIMEOFDAY
+# if defined(ARDUINO_ARCH_ESP8266) || defined(ARDUINIO_ARCH_ESP32)
+// time() does not return UTC on the ESP8266: https://github.com/esp8266/Arduino/issues/4637
+#  define UUID_SYSLOG_HAVE_GETTIMEOFDAY 1
+# else
+#  define UUID_SYSLOG_HAVE_GETTIMEOFDAY 0
+# endif
+#endif
+
+#ifndef UUID_SYSLOG_HAVE_IPADDRESS_TYPE
+# if defined(ARDUINO_ARCH_ESP8266)
+#  define UUID_SYSLOG_HAVE_IPADDRESS_TYPE 1
+# endif
+#endif
+
+#ifndef UUID_SYSLOG_HAVE_IPADDRESS_TYPE
+# define UUID_SYSLOG_HAVE_IPADDRESS_TYPE 0
+#endif
+
 #ifndef UUID_SYSLOG_ARP_CHECK
-# if defined(ARDUINO_ARCH_ESP8266) || defined(ARDUINO_ARCH_ESP32)
+# if defined(LWIP_VERSION_MAJOR) && defined(LWIP_IPV4) && LWIP_VERSION_MAJOR >= 2 && LWIP_IPV4
 #  define UUID_SYSLOG_ARP_CHECK 1
 # endif
 #else
 # define UUID_SYSLOG_ARP_CHECK 0
 #endif
 
-#if UUID_SYSLOG_ARP_CHECK
+#ifndef UUID_SYSLOG_NDP_CHECK
+# if defined(LWIP_VERSION_MAJOR) && defined(LWIP_IPV6) && LWIP_VERSION_MAJOR >= 2 && LWIP_IPV6
+#  define UUID_SYSLOG_NDP_CHECK 1
+# endif
+#endif
+
+#ifndef UUID_SYSLOG_NDP_CHECK
+# define UUID_SYSLOG_NDP_CHECK 0
+#endif
+
+#if UUID_SYSLOG_ARP_CHECK or UUID_SYSLOG_NDP_CHECK
 # include <lwip/netif.h>
-# include <lwip/ip_addr.h>
+#endif
+#if UUID_SYSLOG_ARP_CHECK
+# include <lwip/ip4_addr.h>
 # include <lwip/etharp.h>
+#endif
+#if UUID_SYSLOG_NDP_CHECK
+# include <lwip/ip6_addr.h>
+# include <lwip/nd6.h>
 #endif
 
 #include <algorithm>
@@ -217,36 +252,127 @@ void SyslogService::loop() {
 }
 
 bool SyslogService::can_transmit() {
+#if UUID_SYSLOG_HAVE_IPADDRESS_TYPE
+	if (host_.isV4() && (uint32_t)host_ == (uint32_t)0) {
+		return false;
+	}
+#else
 	if ((uint32_t)host_ == (uint32_t)0) {
 		return false;
 	}
+#endif
 
 	if (WiFi.status() != WL_CONNECTED) {
 		return false;
 	}
 
+	const uint64_t now = uuid::get_uptime_ms();
+	uint64_t message_delay = 100;
+
 #if UUID_SYSLOG_ARP_CHECK
-	if (uuid::get_uptime_ms() - last_transmit_ < (uint64_t)10) {
-#else
-	if (uuid::get_uptime_ms() - last_transmit_ < (uint64_t)100) {
+# if UUID_SYSLOG_HAVE_IPADDRESS_TYPE
+	if (host_.isV4())
 #endif
+	{
+		message_delay = 10;
+	}
+#endif
+#if UUID_SYSLOG_NDP_CHECK && UUID_SYSLOG_HAVE_IPADDRESS_TYPE
+	if (host_.isV6()) {
+		message_delay = 10;
+	}
+#endif
+
+	if (now < last_transmit_ || now - last_transmit_ < message_delay) {
 		return false;
 	}
 
 #if UUID_SYSLOG_ARP_CHECK
-	ip4_addr_t ipaddr;
-	struct eth_addr *eth_ret = nullptr;
-	const ip4_addr_t *ip_ret = nullptr;
+# if UUID_SYSLOG_HAVE_IPADDRESS_TYPE
+	if (host_.isV4())
+# endif
+	{
+		ip4_addr_t ipaddr;
 
-	ip4_addr_set_u32(&ipaddr, (uint32_t)host_);
+		ip4_addr_set_u32(&ipaddr, (uint32_t)host_);
 
-	if (etharp_find_addr(netif_default, &ipaddr, &eth_ret, &ip_ret) == -1) {
-		if (uuid::get_uptime_ms() - last_transmit_ >= (uint64_t)1000) {
-			etharp_query(netif_default, &ipaddr, NULL);
-			last_transmit_ = uuid::get_uptime_ms();
+		if (!ip4_addr_isloopback(&ipaddr) && !ip4_addr_ismulticast(&ipaddr) && !ip4_addr_isbroadcast(&ipaddr, netif_default)) {
+			struct eth_addr *eth_ret = nullptr;
+			const ip4_addr_t *ip_ret = nullptr;
+
+			if (!ip4_addr_netcmp(&ipaddr, netif_ip4_addr(netif_default), netif_ip4_netmask(netif_default))) {
+				// Replace addresses outside the network with the gateway address
+				const ip4_addr_t *gw_addr = netif_ip4_gw(netif_default);
+
+				if (gw_addr != nullptr) {
+					ipaddr = *gw_addr;
+				}
+			}
+
+			if (etharp_find_addr(netif_default, &ipaddr, &eth_ret, &ip_ret) == -1) {
+				etharp_query(netif_default, &ipaddr, NULL);
+				// Avoid querying lwIP again for 1 second
+				last_transmit_ = uuid::get_uptime_ms() + (uint64_t)1000 - message_delay;
+
+				return false;
+			}
 		}
+	}
+#endif
 
-		return false;
+#if UUID_SYSLOG_NDP_CHECK && UUID_SYSLOG_HAVE_IPADDRESS_TYPE
+	if (host_.isV6()) {
+		ip6_addr_t ip6addr;
+
+		IP6_ADDR(&ip6addr, host_.raw6()[0], host_.raw6()[1], host_.raw6()[2], host_.raw6()[3]);
+		ip6_addr_assign_zone(&ip6addr, IP6_UNICAST, netif_default);
+
+		if (!ip6_addr_isloopback(&ip6addr) && !ip6_addr_ismulticast(&ip6addr)) {
+			// Don't send to a scoped address until we have a valid address of the same type
+			bool have_address = false;
+			const u8_t *hwaddr = nullptr;
+
+			for (size_t i = 0; i < LWIP_IPV6_NUM_ADDRESSES; i++) {
+				if (ip6_addr_isvalid(netif_ip6_addr_state(netif_default, i))) {
+					if (ip6_addr_isglobal(&ip6addr)) {
+						if (ip6_addr_isglobal(netif_ip6_addr(netif_default, i))) {
+							have_address = true;
+							break;
+						}
+					} else if (ip6_addr_issitelocal(&ip6addr)) {
+						if (ip6_addr_issitelocal(netif_ip6_addr(netif_default, i))) {
+							have_address = true;
+							break;
+						}
+					} else if (ip6_addr_isuniquelocal(&ip6addr)) {
+						if (ip6_addr_isuniquelocal(netif_ip6_addr(netif_default, i))) {
+							have_address = true;
+							break;
+						}
+					} else if (ip6_addr_islinklocal(&ip6addr)) {
+						if (ip6_addr_islinklocal(netif_ip6_addr(netif_default, i))) {
+							have_address = true;
+							break;
+						}
+					} else {
+						have_address = true;
+						break;
+					}
+				}
+			}
+
+			if (!have_address) {
+				// Avoid checking lwIP again for 1 second
+				last_transmit_ = uuid::get_uptime_ms() + (uint64_t)1000 - message_delay;
+
+				return false;
+			} else if (nd6_get_next_hop_addr_or_queue(netif_default, NULL, &ip6addr, &hwaddr) != ERR_OK) {
+				// Avoid querying lwIP again for 1 second
+				last_transmit_ = uuid::get_uptime_ms() + (uint64_t)1000 - message_delay;
+
+				return false;
+			}
+		}
 	}
 #endif
 
