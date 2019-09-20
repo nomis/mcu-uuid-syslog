@@ -296,7 +296,9 @@ bool SyslogService::can_transmit() {
 
 		ip4_addr_set_u32(&ipaddr, (uint32_t)host_);
 
-		if (!ip4_addr_isloopback(&ipaddr) && !ip4_addr_ismulticast(&ipaddr) && !ip4_addr_isbroadcast(&ipaddr, netif_default)) {
+		if (!ip4_addr_isloopback(&ipaddr)
+				&& !ip4_addr_ismulticast(&ipaddr)
+				&& !ip4_addr_isbroadcast(&ipaddr, netif_default)) {
 			struct eth_addr *eth_ret = nullptr;
 			const ip4_addr_t *ip_ret = nullptr;
 
@@ -327,7 +329,8 @@ bool SyslogService::can_transmit() {
 		IP6_ADDR(&ip6addr, host_.raw6()[0], host_.raw6()[1], host_.raw6()[2], host_.raw6()[3]);
 		ip6_addr_assign_zone(&ip6addr, IP6_UNICAST, netif_default);
 
-		if (!ip6_addr_isloopback(&ip6addr) && !ip6_addr_ismulticast(&ip6addr)) {
+		if (!ip6_addr_isloopback(&ip6addr)
+				&& !ip6_addr_ismulticast(&ip6addr)) {
 			// Don't send to a scoped address until we have a valid address of the same type
 			bool have_address = false;
 			const u8_t *hwaddr = nullptr;
