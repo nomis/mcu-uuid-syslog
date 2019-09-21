@@ -27,12 +27,14 @@
 #include <WiFiUdp.h>
 
 #ifndef UUID_SYSLOG_HAVE_GETTIMEOFDAY
-# if defined(ARDUINO_ARCH_ESP8266) || defined(ARDUINIO_ARCH_ESP32)
+# if defined(ARDUINO_ARCH_ESP8266) || defined(ARDUINO_ARCH_ESP32)
 // time() does not return UTC on the ESP8266: https://github.com/esp8266/Arduino/issues/4637
 #  define UUID_SYSLOG_HAVE_GETTIMEOFDAY 1
-# else
-#  define UUID_SYSLOG_HAVE_GETTIMEOFDAY 0
 # endif
+#endif
+
+#ifndef UUID_SYSLOG_HAVE_GETTIMEOFDAY
+# define UUID_SYSLOG_HAVE_GETTIMEOFDAY 0
 #endif
 
 #ifndef UUID_SYSLOG_HAVE_IPADDRESS_TYPE
@@ -49,7 +51,9 @@
 # if defined(LWIP_VERSION_MAJOR) && defined(LWIP_IPV4) && LWIP_VERSION_MAJOR >= 2 && LWIP_IPV4
 #  define UUID_SYSLOG_ARP_CHECK 1
 # endif
-#else
+#endif
+
+#ifndef UUID_SYSLOG_ARP_CHECK
 # define UUID_SYSLOG_ARP_CHECK 0
 #endif
 

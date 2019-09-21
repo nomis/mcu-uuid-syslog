@@ -4,6 +4,12 @@ Change log
 Unreleased_
 -----------
 
+Fixed
+~~~~~
+
+* Use ``gettimeofday()`` on the ESP32.
+* Don't redefine ``UUID_SYSLOG_ARP_CHECK``.
+
 2.0.2_ |--| 2019-09-20
 ----------------------
 
