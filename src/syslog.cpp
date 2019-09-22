@@ -223,7 +223,7 @@ void SyslogService::operator<<(std::shared_ptr<uuid::log::Message> message) {
 
 void SyslogService::loop() {
 	while (!log_messages_.empty() && can_transmit()) {
-		auto message = std::move(log_messages_.front());
+		auto message = log_messages_.front();
 
 		started_ = true;
 		log_messages_overflow_ = false;
