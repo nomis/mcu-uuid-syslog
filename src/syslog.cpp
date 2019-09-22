@@ -229,6 +229,8 @@ void SyslogService::loop() {
 		log_messages_overflow_ = false;
 		auto ok = transmit(message);
 		if (ok) {
+			// The transmit() may have called yield() allowing
+			// other messages to have been added to the queue.
 			if (!log_messages_overflow_) {
 				log_messages_.pop_front();
 			}

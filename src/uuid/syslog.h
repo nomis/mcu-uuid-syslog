@@ -28,6 +28,7 @@
 #include <WiFiUdp.h>
 #include <time.h>
 
+#include <atomic>
 #include <list>
 #include <memory>
 #include <string>
@@ -250,7 +251,7 @@ private:
 	size_t maximum_log_messages_ = MAX_LOG_MESSAGES; /*!< Maximum number of log messages to buffer before they are output. @since 1.0.0 */
 	unsigned long log_message_id_ = 0; /*!< The next identifier to use for queued log messages. @since 1.0.0 */
 	std::list<QueuedLogMessage> log_messages_; /*!< Queued log messages, in the order they were received. @since 1.0.0 */
-	bool log_messages_overflow_ = false; /*!< Check if log messages have overflowed the buffer. @since 1.0.0 */
+	std::atomic<bool> log_messages_overflow_{false}; /*!< Check if log messages have overflowed the buffer. @since 1.0.0 */
 	uint64_t mark_interval_ = 0; /*!< Mark interval in milliseconds. @since 2.0.0 */
 	uint64_t last_message_ = 0; /*!< Last message/mark time. @since 2.0.0 */
 };

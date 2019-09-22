@@ -9,6 +9,7 @@ Fixed
 
 * Log messages that failed to be sent are not left on the queue
   correctly and may cause a crash when they are retried.
+* Add memory barrier around checks for log queue overflow.
 
 2.0.3_ |--| 2019-09-21
 ----------------------
