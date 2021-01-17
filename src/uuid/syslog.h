@@ -1,6 +1,6 @@
 /*
  * uuid-syslog - Syslog service
- * Copyright 2019  Simon Arlott
+ * Copyright 2019,2021  Simon Arlott
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -61,8 +61,7 @@ public:
 	 * @since 1.0.0
 	 */
 	SyslogService() = default;
-
-	~SyslogService();
+	~SyslogService() = default;
 
 	/**
 	 * Register the log handler with the logging framework.

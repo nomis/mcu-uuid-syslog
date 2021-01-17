@@ -4,6 +4,12 @@ Change log
 Unreleased_
 -----------
 
+Changed
+~~~~~~~
+
+* Don't unregister handler explicitly in the destructor, this is now
+  handled by the logging library.
+
 2.0.4_ |--| 2019-09-22
 ----------------------
 

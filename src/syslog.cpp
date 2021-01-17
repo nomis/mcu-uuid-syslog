@@ -1,6 +1,6 @@
 /*
  * uuid-syslog - Syslog service
- * Copyright 2019  Simon Arlott
+ * Copyright 2019,2021  Simon Arlott
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -95,10 +95,6 @@ namespace syslog {
 
 uuid::log::Logger SyslogService::logger_{FPSTR(__pstr__logger_name), uuid::log::Facility::SYSLOG};
 bool SyslogService::QueuedLogMessage::time_good_ = false;
-
-SyslogService::~SyslogService() {
-	uuid::log::Logger::unregister_handler(this);
-}
 
 void SyslogService::start() {
 	uuid::log::Logger::register_handler(this, uuid::log::Level::ALL);
