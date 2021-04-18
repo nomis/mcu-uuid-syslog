@@ -4,6 +4,11 @@ Change log
 Unreleased_
 -----------
 
+2.0.6_ |--| 2021-04-18
+----------------------
+
+Upgrade to PlatformIO 5.
+
 Changed
 ~~~~~~~
 
@@ -110,7 +115,8 @@ Added
 
 .. |--| unicode:: U+2013 .. EN DASH
 
-.. _Unreleased: https://github.com/nomis/mcu-uuid-syslog/compare/2.0.5...HEAD
+.. _Unreleased: https://github.com/nomis/mcu-uuid-syslog/compare/2.0.6...HEAD
+.. _2.0.6: https://github.com/nomis/mcu-uuid-syslog/compare/2.0.5...2.0.6
 .. _2.0.5: https://github.com/nomis/mcu-uuid-syslog/compare/2.0.4...2.0.5
 .. _2.0.4: https://github.com/nomis/mcu-uuid-syslog/compare/2.0.3...2.0.4
 .. _2.0.3: https://github.com/nomis/mcu-uuid-syslog/compare/2.0.2...2.0.3
