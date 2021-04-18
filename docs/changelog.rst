@@ -4,6 +4,11 @@ Change log
 Unreleased_
 -----------
 
+Changed
+~~~~~~~
+
+* Use PlatformIO 5 dependency specification.
+
 2.0.5_ |--| 2021-01-17
 ----------------------
 

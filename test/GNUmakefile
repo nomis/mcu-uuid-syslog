@@ -6,9 +6,7 @@ all: build doxygen
 build:
 	rm -rf build/*/.pio
 	# Workaround for https://github.com/platformio/platformio-core/issues/2573
-	cd build/example-Example && pio lib install uuid-common uuid-log
-	# Workaround for https://github.com/platformio/platformio-core/issues/3673
-	git checkout -- build/example-Example/platformio.ini
+	cd build/example-Example && pio lib install --no-save nomis/uuid-common nomis/uuid-log
 	platformio run -d build/example-Example
 
 doxygen:
