@@ -4,6 +4,13 @@ Change log
 Unreleased_
 -----------
 
+Changed
+~~~~~~~
+
+* Relax IPv6 scope checking when waiting for a local address to allow
+  either global or local unicast addresses to be used with any global
+  or local unicast destination. Previously they had to be the same type.
+
 2.0.6_ |--| 2021-04-18
 ----------------------
 
