@@ -416,4 +416,4 @@ bool SyslogService::transmit(const QueuedLogMessage &message) {
 
 } // namespace syslog
 
-} // namespace fridge
+} // namespace uuid
