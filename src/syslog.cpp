@@ -274,7 +274,7 @@ bool SyslogService::can_transmit() {
 #if UUID_SYSLOG_ARP_CHECK
 # if UUID_SYSLOG_HAVE_IPADDRESS_TYPE
 	if (host_.isV4())
-#endif
+# endif
 	{
 		message_delay = 10;
 	}
