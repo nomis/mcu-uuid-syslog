@@ -4,6 +4,12 @@ Change log
 Unreleased_
 -----------
 
+2.1.0_ |--| 2022-01-27
+----------------------
+
+More visibility of the log message queue and control over the rate at which
+messages are dispatched.
+
 Added
 ~~~~~
 
@@ -135,7 +141,8 @@ Added
 
 .. |--| unicode:: U+2013 .. EN DASH
 
-.. _Unreleased: https://github.com/nomis/mcu-uuid-syslog/compare/2.0.6...HEAD
+.. _Unreleased: https://github.com/nomis/mcu-uuid-syslog/compare/2.1.0...HEAD
+.. _2.1.0: https://github.com/nomis/mcu-uuid-syslog/compare/2.0.6...2.1.0
 .. _2.0.6: https://github.com/nomis/mcu-uuid-syslog/compare/2.0.5...2.0.6
 .. _2.0.5: https://github.com/nomis/mcu-uuid-syslog/compare/2.0.4...2.0.5
 .. _2.0.4: https://github.com/nomis/mcu-uuid-syslog/compare/2.0.3...2.0.4
