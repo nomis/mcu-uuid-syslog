@@ -4,6 +4,11 @@ Change log
 Unreleased_
 -----------
 
+Added
+~~~~~
+
+* Function to get the current size of the log message queue.
+
 Changed
 ~~~~~~~
 

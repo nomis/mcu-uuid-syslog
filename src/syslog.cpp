@@ -150,6 +150,10 @@ void SyslogService::maximum_log_messages(size_t count) {
 	}
 }
 
+size_t SyslogService::current_log_messages() const {
+	return log_messages_.size();
+}
+
 std::pair<IPAddress,uint16_t> SyslogService::destination() const {
 	return std::make_pair(host_, port_);
 }

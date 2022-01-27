@@ -110,6 +110,14 @@ public:
 	void maximum_log_messages(size_t count);
 
 	/**
+	 * Get the current number of queued log messages.
+	 *
+	 * @return The current number of queued log messages.
+	 * @since 2.1.0
+	 */
+	size_t current_log_messages() const;
+
+	/**
 	 * Get the server to send messages to.
 	 *
 	 * @since 2.0.0
