@@ -8,6 +8,14 @@ Added
 ~~~~~
 
 * Function to get the current size of the log message queue.
+* Symbols to control the UDP message sending delay:
+
+  * ``UUID_SYSLOG_UDP_BASE_MESSAGE_DELAY``
+  * ``UUID_SYSLOG_UDP_IPV4_ARP_MESSAGE_DELAY``
+  * ``UUID_SYSLOG_UDP_IPV6_NDP_MESSAGE_DELAY``
+
+  It is inadvisable to change these because UDP packets may be queued and then
+  discarded by the platform when the queue limit is reached.
 
 Changed
 ~~~~~~~

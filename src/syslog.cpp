@@ -87,6 +87,18 @@
 #include <uuid/common.h>
 #include <uuid/log.h>
 
+#ifndef UUID_SYSLOG_UDP_BASE_MESSAGE_DELAY
+# define UUID_SYSLOG_UDP_BASE_MESSAGE_DELAY 100
+#endif
+
+#ifndef UUID_SYSLOG_UDP_IPV4_ARP_MESSAGE_DELAY
+# define UUID_SYSLOG_UDP_IPV4_ARP_MESSAGE_DELAY 10
+#endif
+
+#ifndef UUID_SYSLOG_UDP_IPV6_NDP_MESSAGE_DELAY
+# define UUID_SYSLOG_UDP_IPV6_NDP_MESSAGE_DELAY 10
+#endif
+
 static const char __pstr__logger_name[] __attribute__((__aligned__(sizeof(int)))) PROGMEM = "syslog";
 
 namespace uuid {
@@ -273,19 +285,19 @@ bool SyslogService::can_transmit() {
 	}
 
 	const uint64_t now = uuid::get_uptime_ms();
-	uint64_t message_delay = 100;
+	uint64_t message_delay = UUID_SYSLOG_UDP_BASE_MESSAGE_DELAY;
 
 #if UUID_SYSLOG_ARP_CHECK
 # if UUID_SYSLOG_HAVE_IPADDRESS_TYPE
 	if (host_.isV4())
 # endif
 	{
-		message_delay = 10;
+		message_delay = UUID_SYSLOG_UDP_IPV4_ARP_MESSAGE_DELAY;
 	}
 #endif
 #if UUID_SYSLOG_NDP_CHECK && UUID_SYSLOG_HAVE_IPADDRESS_TYPE
 	if (host_.isV6()) {
-		message_delay = 10;
+		message_delay = UUID_SYSLOG_UDP_IPV6_NDP_MESSAGE_DELAY;
 	}
 #endif
 
