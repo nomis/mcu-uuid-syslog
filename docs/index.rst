@@ -40,6 +40,6 @@ Resources
    Source code <https://github.com/nomis/mcu-uuid-syslog>
    Releases <https://github.com/nomis/mcu-uuid-syslog/releases>
    Namespace reference <https://mcu-doxygen.uuid.uk/namespaceuuid_1_1syslog.html>
-   PlatformIO library <https://platformio.org/lib/show/6655/uuid-syslog>
+   PlatformIO library <https://registry.platformio.org/libraries/nomis/uuid-syslog>
    changelog
    Issue tracker <https://github.com/nomis/mcu-uuid-syslog/issues>
