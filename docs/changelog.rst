@@ -4,6 +4,11 @@ Change log
 Unreleased_
 -----------
 
+Changed
+~~~~~~~
+
+* Silence compiler warnings/errors about ``%S`` in a format string.
+
 2.1.0_ |--| 2022-01-27
 ----------------------
 

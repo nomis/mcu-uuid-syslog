@@ -416,7 +416,10 @@ bool SyslogService::transmit(const QueuedLogMessage &message) {
 	}
 	udp_.printf_P(PSTR(" %s - - - - \xEF\xBB\xBF"), hostname_.c_str());
 	udp_.print(uuid::log::format_timestamp_ms(message.content_->uptime_ms, 3).c_str());
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wformat"
 	udp_.printf_P(PSTR(" %c %lu: [%S] "), uuid::log::format_level_char(message.content_->level), message.id_, message.content_->name);
+#pragma GCC diagnostic pop
 	udp_.print(message.content_->text.c_str());
 	bool ok = (udp_.endPacket() == 1);
 
