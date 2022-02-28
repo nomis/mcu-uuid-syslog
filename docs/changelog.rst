@@ -4,6 +4,11 @@ Change log
 Unreleased_
 -----------
 
+2.1.2_ |--| 2022-02-28
+----------------------
+
+Fix performance on the ESP32.
+
 Fixed
 ~~~~~
 
@@ -157,7 +162,8 @@ Added
 
 .. |--| unicode:: U+2013 .. EN DASH
 
-.. _Unreleased: https://github.com/nomis/mcu-uuid-syslog/compare/2.1.1...HEAD
+.. _Unreleased: https://github.com/nomis/mcu-uuid-syslog/compare/2.1.2...HEAD
+.. _2.1.2: https://github.com/nomis/mcu-uuid-syslog/compare/2.1.1...2.1.2
 .. _2.1.1: https://github.com/nomis/mcu-uuid-syslog/compare/2.1.0...2.1.1
 .. _2.1.0: https://github.com/nomis/mcu-uuid-syslog/compare/2.0.6...2.1.0
 .. _2.0.6: https://github.com/nomis/mcu-uuid-syslog/compare/2.0.5...2.0.6
