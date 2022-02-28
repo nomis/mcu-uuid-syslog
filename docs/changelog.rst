@@ -4,6 +4,12 @@ Change log
 Unreleased_
 -----------
 
+Fixed
+~~~~~
+
+* Include lwIP headers directly so that messages can be sent faster on the
+  ESP32.
+
 2.1.1_ |--| 2022-02-23
 ----------------------
 
