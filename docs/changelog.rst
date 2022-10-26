@@ -4,6 +4,18 @@ Change log
 Unreleased_
 -----------
 
+Added
+~~~~~
+
+* Indicate whether this version of the library is thread-safe or not
+  (``UUID_SYSLOG_THREAD_SAFE`` and ``uuid::syslog::thread_safe``).
+
+Changed
+~~~~~~~
+
+* Make the library thread-safe (for log messages only) when supported by the
+  platform.
+
 2.1.2_ |--| 2022-02-28
 ----------------------
 

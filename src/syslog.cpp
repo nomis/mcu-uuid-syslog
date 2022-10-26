@@ -88,6 +88,9 @@
 #include <algorithm>
 #include <list>
 #include <memory>
+#if UUID_SYSLOG_THREAD_SAFE
+# include <mutex>
+#endif
 #include <string>
 
 #include <uuid/common.h>
@@ -123,6 +126,9 @@ uuid::log::Level SyslogService::log_level() const {
 }
 
 void SyslogService::remove_queued_messages(uuid::log::Level level) {
+#if UUID_SYSLOG_THREAD_SAFE
+	std::lock_guard<std::mutex> lock{mutex_};
+#endif
 	unsigned long offset = 0;
 
 	for (auto it = log_messages_.begin(); it != log_messages_.end(); ) {
@@ -143,9 +149,8 @@ void SyslogService::log_level(uuid::log::Level level) {
 		remove_queued_messages(level);
 	}
 
-	static bool level_set = false;
-	bool level_changed = !level_set || (level != log_level());
-	level_set = true;
+	bool level_changed = !level_set_ || (level != log_level());
+	level_set_ = true;
 
 	if (level_changed && level < uuid::log::Level::NOTICE) {
 		logger_.info(F("Log level set to %S"), uuid::log::format_level_uppercase(level));
@@ -157,10 +162,18 @@ void SyslogService::log_level(uuid::log::Level level) {
 }
 
 size_t SyslogService::maximum_log_messages() const {
+#if UUID_SYSLOG_THREAD_SAFE
+	std::lock_guard<std::mutex> lock{mutex_};
+#endif
+
 	return maximum_log_messages_;
 }
 
 void SyslogService::maximum_log_messages(size_t count) {
+#if UUID_SYSLOG_THREAD_SAFE
+	std::lock_guard<std::mutex> lock{mutex_};
+#endif
+
 	maximum_log_messages_ = std::max((size_t)1, count);
 
 	while (log_messages_.size() > maximum_log_messages_) {
@@ -169,6 +182,10 @@ void SyslogService::maximum_log_messages(size_t count) {
 }
 
 size_t SyslogService::current_log_messages() const {
+#if UUID_SYSLOG_THREAD_SAFE
+	std::lock_guard<std::mutex> lock{mutex_};
+#endif
+
 	return log_messages_.size();
 }
 
@@ -230,32 +247,67 @@ SyslogService::QueuedLogMessage::QueuedLogMessage(unsigned long id, std::shared_
 	}
 }
 
-void SyslogService::operator<<(std::shared_ptr<uuid::log::Message> message) {
+/* Mutex already locked by caller. */
+void SyslogService::add_message(std::shared_ptr<uuid::log::Message> &message) {
 	if (log_messages_.size() >= maximum_log_messages_) {
-		log_messages_overflow_ = true;
 		log_messages_.pop_front();
 	}
 
 	log_messages_.emplace_back(log_message_id_++, std::move(message));
 }
 
+void SyslogService::operator<<(std::shared_ptr<uuid::log::Message> message) {
+#if UUID_SYSLOG_THREAD_SAFE
+	std::lock_guard<std::mutex> lock{mutex_};
+#endif
+
+	add_message(message);
+}
+
 void SyslogService::loop() {
-	while (!log_messages_.empty() && can_transmit()) {
+#if UUID_SYSLOG_THREAD_SAFE
+	std::unique_lock<std::mutex> lock{mutex_};
+#endif
+
+	while (!log_messages_.empty()) {
+#if UUID_SYSLOG_THREAD_SAFE
+		lock.unlock();
+#endif
+
+		if (!can_transmit())
+			return;
+
+#if UUID_SYSLOG_THREAD_SAFE
+		lock.lock();
+
+		if (log_messages_.empty())
+			break;
+#endif
+
 		auto message = log_messages_.front();
 
 		started_ = true;
-		log_messages_overflow_ = false;
+
 		auto ok = transmit(message);
 		if (ok) {
-			// The transmit() may have called yield() allowing
-			// other messages to have been added to the queue.
-			if (!log_messages_overflow_) {
+#if UUID_SYSLOG_THREAD_SAFE
+			lock.lock();
+#endif
+
+			if (log_messages_.front().content_ == message.content_) {
 				log_messages_.pop_front();
 			}
-			last_message_ = uuid::get_uptime_ms();
+
+#if UUID_SYSLOG_THREAD_SAFE
+			lock.unlock();
+#endif
 		}
 
 		::yield();
+
+#if UUID_SYSLOG_THREAD_SAFE
+		lock.lock();
+#endif
 
 		if (!ok) {
 			break;
@@ -266,11 +318,12 @@ void SyslogService::loop() {
 		if (uuid::get_uptime_ms() - last_message_ >= mark_interval_) {
 			// This is generated manually because the log level may not
 			// be high enough to receive INFO messages.
-			operator<<(std::make_shared<uuid::log::Message>(uuid::get_uptime_ms(),
+			auto message = std::make_shared<uuid::log::Message>(uuid::get_uptime_ms(),
 					uuid::log::Level::INFO,
 					uuid::log::Facility::SYSLOG,
 					reinterpret_cast<const __FlashStringHelper *>(__pstr__logger_name),
-					uuid::read_flash_string(F("-- MARK --"))));
+					uuid::read_flash_string(F("-- MARK --")));
+			add_message(message);
 		}
 	}
 }

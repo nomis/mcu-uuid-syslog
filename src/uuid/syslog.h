@@ -28,12 +28,32 @@
 #include <WiFiUdp.h>
 #include <time.h>
 
-#include <atomic>
 #include <list>
 #include <memory>
+#if UUID_SYSLOG_THREAD_SAFE
+# include <mutex>
+#endif
 #include <string>
 
 #include <uuid/log.h>
+
+#ifndef UUID_LOG_THREAD_SAFE
+# define UUID_LOG_THREAD_SAFE 0
+#endif
+
+#ifndef UUID_COMMON_STD_MUTEX_AVAILABLE
+# define UUID_COMMON_STD_MUTEX_AVAILABLE 0
+#endif
+
+#if defined(DOXYGEN) || UUID_COMMON_STD_MUTEX_AVAILABLE
+# define UUID_SYSLOG_THREAD_SAFE 1
+#else
+# define UUID_SYSLOG_THREAD_SAFE 0
+#endif
+
+#if UUID_LOG_THREAD_SAFE
+# include <mutex>
+#endif
 
 namespace uuid {
 
@@ -44,6 +64,17 @@ namespace uuid {
  * - <a href="https://mcu-uuid-syslog.readthedocs.io/">Documentation</a>
  */
 namespace syslog {
+
+/**
+ * Thread-safe status of the library.
+ *
+ * @since 2.2.0
+ */
+#if UUID_COMMON_THREAD_SAFE && UUID_LOG_THREAD_SAFE && UUID_SYSLOG_THREAD_SAFE
+static constexpr bool thread_safe = true;
+#else
+static constexpr bool thread_safe = false;
+#endif
 
 /**
  * Log handler for sending messages to a syslog server.
@@ -221,6 +252,19 @@ private:
 	};
 
 	/**
+	 * Add a new log message.
+	 *
+	 * This will be put in a queue for output at the next loop()
+	 * process. The queue has a maximum size of
+	 * get_maximum_log_messages() and will discard the oldest message
+	 * first.
+	 *
+	 * @param[in] message New log message, shared by all handlers.
+	 * @since 2.2.0
+	 */
+	void add_message(std::shared_ptr<uuid::log::Message> &message);
+
+	/**
 	 * Remove messages that were queued before the log level was set.
 	 *
 	 * @param[in] level New log level
@@ -250,15 +294,18 @@ private:
 	static uuid::log::Logger logger_; /*!< uuid::log::Logger instance for syslog services. @since 1.0.0 */
 
 	bool started_ = false; /*!< Flag to indicate that messages have started being transmitted. @since 1.0.0 */
+	bool level_set_ = false; /*!< Flag to indicate that the log level has been set at least once. @since 2.2.0 */
 	WiFiUDP udp_; /*!< UDP client. @since 1.0.0 */
 	IPAddress host_; /*!< Host to send messages to. @since 1.0.0 */
 	uint16_t port_ = DEFAULT_PORT; /*!< Port to send messages to. @since 1.0.0 */
 	uint64_t last_transmit_ = 0; /*!< Last transmit time. @since 1.0.0 */
 	std::string hostname_{'-'}; /*!< Local hostname. @since 1.0.0 */
+#if UUID_SYSLOG_THREAD_SAFE
+	mutable std::mutex mutex_; /*!< Mutex for queued log messages. @since 2.2.0 */
+#endif
 	size_t maximum_log_messages_ = MAX_LOG_MESSAGES; /*!< Maximum number of log messages to buffer before they are output. @since 1.0.0 */
 	unsigned long log_message_id_ = 0; /*!< The next identifier to use for queued log messages. @since 1.0.0 */
 	std::list<QueuedLogMessage> log_messages_; /*!< Queued log messages, in the order they were received. @since 1.0.0 */
-	std::atomic<bool> log_messages_overflow_{false}; /*!< Check if log messages have overflowed the buffer. @since 1.0.0 */
 	uint64_t mark_interval_ = 0; /*!< Mark interval in milliseconds. @since 2.0.0 */
 	uint64_t last_message_ = 0; /*!< Last message/mark time. @since 2.0.0 */
 };
