@@ -14,6 +14,8 @@ Fixed
 ~~~~~
 
 * Crash when transmitting messages when operating in thread-safe mode.
+* Last message time wasn't being updated so a flood of mark messages
+  would occur when the uptime reached the mark interval.
 
 2.2.0_ |--| 2022-10-26
 ----------------------

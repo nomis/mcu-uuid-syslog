@@ -299,6 +299,7 @@ void SyslogService::loop() {
 			lock.lock();
 #endif
 
+			last_message_ = last_transmit_;
 			if (!log_messages_.empty()
 					&& log_messages_.front().content_ == message.content_) {
 				log_messages_.pop_front();
