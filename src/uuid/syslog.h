@@ -242,7 +242,7 @@ private:
 
 		unsigned long id_; /*!< Sequential identifier for this log message. @since 1.0.0 */
 		struct timeval time_; /*!< Time message was received. @since 1.0.0 */
-		const std::shared_ptr<const uuid::log::Message> content_; /*!< Log message content. @since 1.0.0 */
+		std::shared_ptr<const uuid::log::Message> content_; /*!< Log message content. @since 1.0.0 */
 
 	private:
 		static bool time_good_; /*!< System time appears to be valid. @since 1.0.0 */

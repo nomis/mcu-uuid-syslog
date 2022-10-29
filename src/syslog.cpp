@@ -268,6 +268,7 @@ void SyslogService::loop() {
 #if UUID_SYSLOG_THREAD_SAFE
 	std::unique_lock<std::mutex> lock{mutex_};
 #endif
+	size_t count = std::max((size_t)1, MAX_LOG_MESSAGES);
 
 	while (!log_messages_.empty()) {
 #if UUID_SYSLOG_THREAD_SAFE
@@ -310,6 +311,11 @@ void SyslogService::loop() {
 #endif
 
 		if (!ok) {
+			break;
+		}
+
+		count--;
+		if (count == 0) {
 			break;
 		}
 	}
