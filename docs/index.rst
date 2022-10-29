@@ -11,8 +11,7 @@ Purpose
 
 Provides a log handler that sends messages to a syslog server (using
 the `RFC 5424 protocol <https://tools.ietf.org/html/rfc5424>`_).
-Thread-safe (for log messages only, not configuration) on the ESP32 but
-cannot be used from an interrupt context.
+Thread-safe (for log messages only, not configuration) on the ESP32.
 
 Dependencies
 ------------
