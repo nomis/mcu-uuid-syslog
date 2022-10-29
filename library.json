@@ -12,7 +12,7 @@
 		"type": "git",
 		"url": "https://github.com/nomis/mcu-uuid-syslog.git"
 	},
-	"version": "2.2.0",
+	"version": "2.2.1",
 	"license": "GPL-3.0-or-later",
 	"homepage": "https://mcu-uuid-syslog.readthedocs.io/",
 	"export": {
@@ -27,8 +27,8 @@
 		"arduino"
 	],
 	"dependencies": {
-		"nomis/uuid-common": "^1.0.2",
-		"nomis/uuid-log": "^2.1.4"
+		"nomis/uuid-common": "^1.2.0",
+		"nomis/uuid-log": "^2.3.0"
 	},
 	"build": {
 		"flags": "-Wall -Wextra",

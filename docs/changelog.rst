@@ -4,6 +4,11 @@ Change log
 Unreleased_
 -----------
 
+2.2.1_ |--| 2022-10-29
+----------------------
+
+Fix thread-safe mode and mark message handling.
+
 Changed
 ~~~~~~~
 
@@ -192,7 +197,8 @@ Added
 
 .. |--| unicode:: U+2013 .. EN DASH
 
-.. _Unreleased: https://github.com/nomis/mcu-uuid-syslog/compare/2.2.0...HEAD
+.. _Unreleased: https://github.com/nomis/mcu-uuid-syslog/compare/2.2.1...HEAD
+.. _2.2.1: https://github.com/nomis/mcu-uuid-syslog/compare/2.2.0...2.2.1
 .. _2.2.0: https://github.com/nomis/mcu-uuid-syslog/compare/2.1.2...2.2.0
 .. _2.1.2: https://github.com/nomis/mcu-uuid-syslog/compare/2.1.1...2.1.2
 .. _2.1.1: https://github.com/nomis/mcu-uuid-syslog/compare/2.1.0...2.1.1
