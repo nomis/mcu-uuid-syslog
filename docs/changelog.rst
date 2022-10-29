@@ -10,6 +10,11 @@ Changed
 * Limit the maximum number of log messages that can be transmitted in
   one loop iteration.
 
+Fixed
+~~~~~
+
+* Crash when transmitting messages when operating in thread-safe mode.
+
 2.2.0_ |--| 2022-10-26
 ----------------------
 

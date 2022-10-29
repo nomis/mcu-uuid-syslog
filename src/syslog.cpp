@@ -289,13 +289,18 @@ void SyslogService::loop() {
 
 		started_ = true;
 
+#if UUID_SYSLOG_THREAD_SAFE
+		lock.unlock();
+#endif
+
 		auto ok = transmit(message);
 		if (ok) {
 #if UUID_SYSLOG_THREAD_SAFE
 			lock.lock();
 #endif
 
-			if (log_messages_.front().content_ == message.content_) {
+			if (!log_messages_.empty()
+					&& log_messages_.front().content_ == message.content_) {
 				log_messages_.pop_front();
 			}
 
