@@ -30,9 +30,6 @@
 
 #include <list>
 #include <memory>
-#if UUID_SYSLOG_THREAD_SAFE
-# include <mutex>
-#endif
 #include <string>
 
 #include <uuid/log.h>
