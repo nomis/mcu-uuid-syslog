@@ -1,5 +1,5 @@
 /*
- * uuid-syslog - Syslog service
+ * uuid-syslog - Microcontroller syslog service
  * Copyright 2019,2021-2022  Simon Arlott
  *
  * This program is free software: you can redistribute it and/or modify
@@ -372,7 +372,7 @@ bool SyslogService::can_transmit() {
 	}
 #endif
 
-	if (now < last_transmit_ || now - last_transmit_ < message_delay) {
+	if (started_ && (now < last_transmit_ || now - last_transmit_ < message_delay)) {
 		return false;
 	}
 

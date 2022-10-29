@@ -1,5 +1,5 @@
 /*
- * uuid-syslog - Syslog service
+ * uuid-syslog - Microcontroller syslog service
  * Copyright 2019,2021-2022  Simon Arlott
  *
  * This program is free software: you can redistribute it and/or modify

@@ -28,6 +28,12 @@ Example
 
 .. literalinclude:: ../examples/Example.cpp
 
+Output
+~~~~~~
+
+.. literalinclude:: ../examples/Example.txt
+   :language: none
+
 .. |uuid::syslog::SyslogService| replace:: ``uuid::syslog::SyslogService``
 .. _uuid::syslog::SyslogService: https://mcu-doxygen.uuid.uk/classuuid_1_1syslog_1_1SyslogService.html
 
