@@ -70,7 +70,13 @@ void yield(void) {
 }
 
 time_t time(time_t *) {
-	return 1577836800 + __millis / 1000;
+	static constexpr unsigned long NTP_TIME = 3000;
+
+	if (__millis >= NTP_TIME) {
+		return 1577836800 + (__millis - NTP_TIME) / 1000;
+	} else {
+		return __millis / 1000;
+	}
 }
 
 int snprintf_P(char *str, size_t size, const char *format, ...) {
