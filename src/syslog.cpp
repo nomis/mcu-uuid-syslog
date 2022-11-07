@@ -481,7 +481,24 @@ bool SyslogService::transmit(const QueuedLogMessage &message) {
 		last_transmit_ = uuid::get_uptime_ms();
 		return false;
 	}
-	udp_.printf_P(PSTR("<%u>1 "), ((unsigned int)message.content_->facility * 8) + std::min(7U, (unsigned int)message.content_->level));
+	/*
+	 * The level is constrained to 0-7 by design in RFC 5424 because higher
+	 * severity values would be a different severity in another facility. The
+	 * TRACE level and all other invalid values (because of the conversion to
+	 * unsigned) are converted to DEBUG.
+	 *
+	 * RFC 5424 requires that the facility MUST be 0-23. Values here are allowed
+	 * to go up to 31 because there is no obvious candidate to convert them to
+	 * and because the multiplication by a factor of 256 means that (with the
+	 * cast back to uint8_t) higher values just overflow into other facilities
+	 * (which is easier than doing it by modulo 24). The enum doesn't allow
+	 * values that are out of range of the RFC.
+	 *
+	 * The maximum possible priority value does not exceed the requirement that
+	 * the PRI part MUST be 3-5 characters.
+	 */
+	udp_.printf_P(PSTR("<%u>1 "), (uint8_t)(message.content_->facility * 8U)
+		+ std::min(7U, (unsigned int)message.content_->level));
 	if (tm.tm_year != 0) {
 		udp_.printf_P(PSTR("%04u-%02u-%02uT%02u:%02u:%02u.%06luZ"),
 				tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday,

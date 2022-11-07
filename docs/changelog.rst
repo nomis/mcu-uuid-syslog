@@ -9,6 +9,13 @@ Changed
 
 * Use ``PSTR_ALIGN`` for flash strings.
 
+Fixed
+~~~~~
+
+* Facility values higher than 31 (values higher than 23 are not allowed
+  by the ``uuid::log::Facility`` enum) would cause the priority value to
+  be out of range (more than 3 digits).
+
 2.2.1_ |--| 2022-10-29
 ----------------------
 
