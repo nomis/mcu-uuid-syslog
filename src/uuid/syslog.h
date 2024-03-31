@@ -216,7 +216,7 @@ public:
 	 * @param[in] message New log message, shared by all handlers.
 	 * @since 1.0.0
 	 */
-	virtual void operator<<(std::shared_ptr<uuid::log::Message> message);
+	void operator<<(std::shared_ptr<uuid::log::Message> message) override;
 
 private:
 	/**
