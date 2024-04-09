@@ -69,7 +69,7 @@ void yield(void) {
 
 }
 
-time_t time(time_t *) {
+int32_t faketime(void) {
 	static constexpr unsigned long NTP_TIME = 3000;
 
 	if (__millis >= NTP_TIME) {
@@ -77,6 +77,18 @@ time_t time(time_t *) {
 	} else {
 		return __millis / 1000;
 	}
+}
+
+extern "C" time_t time(time_t *) {
+	return faketime();
+}
+
+#ifndef __USE_TIME_BITS64
+typedef int64_t __time64_t;
+#endif
+
+extern "C" __time64_t __time64(__time64_t *) {
+	return faketime();
 }
 
 int snprintf_P(char *str, size_t size, const char *format, ...) {
