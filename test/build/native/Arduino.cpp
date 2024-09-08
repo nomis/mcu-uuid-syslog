@@ -1,6 +1,6 @@
 /*
  * uuid-syslog - Microcontroller syslog service
- * Copyright 2022  Simon Arlott
+ * Copyright 2022-2024  Simon Arlott
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -83,9 +83,7 @@ extern "C" time_t time(time_t *) {
 	return faketime();
 }
 
-#ifndef __USE_TIME_BITS64
 typedef int64_t __time64_t;
-#endif
 
 extern "C" __time64_t __time64(__time64_t *) {
 	return faketime();
