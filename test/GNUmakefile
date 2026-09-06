@@ -21,6 +21,3 @@ doxygen:
 	(cat Doxyfile; echo INPUT += ../src) | doxygen - 1>doxygen.out 2>doxygen.err
 	cat doxygen.err
 	cmp /dev/null doxygen.err
-
-registry:
-	diff -U0 <(git tag | sort -n) <(platformio pkg show nomis/uuid-syslog | grep -A 1000000 -E ^Version | tail -n +3 | grep -vE '^$$' | awk '{print $$1}' | sort -n)
